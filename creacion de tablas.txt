@@ -1,0 +1,149 @@
+CREATE TABLE IF NOT EXISTS dim_customers
+(
+    "CustomerId" integer NOT NULL primary key autoincrement,
+    "CompanyName" nvarchar(40) NOT NULL,
+    "ContactName" nvarcharg(20) NOT NULL,
+    "ContactTitle" nvarchar(80) NOT NULL,
+    "Address" nvarchar(70) NOT NULL,
+    "City" nvarchar(40) NOT NULL,
+    "Region" nvarchar(40) NOT NULL,
+    "Country" nvarchar(40) NOT NULL,
+    "PostalCode" nvarchar(10) NOT NULL,
+    "Phone" nvarchar(24) NOT NULL,
+    "Fax" nvarchar(24) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS dim_employees
+(
+    "EmployeeId" integer NOT NULL primary key autoincrement,
+    "LastName" nvarchar varying(20) NOT NULL,
+    "FirstName" nvarchar varying(20) NOT NULL,
+    "Title" nvarchar varying(30) NOT NULL,
+    "TitleOfCourtesy" nvarchar varying(30) NOT NULL,
+    "BirthDate" nvarchar varying(25) NOT NULL,
+    "HireDate" nvarcha varying(25) NOT NULL,
+    "Address" nvarchar varying(70) NOT NULL,
+    "City" nvarchar varying(40) NOT NULL,
+    "Region" nvarchar varying(40) NOT NULL,
+    "Country" nvarchar varying(40) NOT NULL,
+    "HomePhone" nvarchar varying(10) NOT NULL,
+    "Extension" nvarchar varying(10) NOT NULL,
+    "Photo" nvarchar varying(10) NOT NULL,
+    "PostalCode" nvarchar varying(10) NOT NULL,
+    "Notes" nvarchar varying(24) NOT NULL,
+    "PhotoPath" nvarchar varying(60) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS dim_products
+(
+    "ProductId" integer NOT NULL primary key autoincrement,
+    "ProductName" nvarchar varying(20) NOT NULL,
+    "QuantityPerUnit" nvarchar varying(80) NOT NULL,
+    "UnitPrice" DECIMAL (30) NOT NULL,
+    "UnitsInStock" integer  NOT NULL,
+    "UnitsOnOrder " integer  NOT NULL,
+    "ReorderLevel" integer  NOT NULL,
+    "Discontinued " integer  NOT NULL,
+     "SupplierName "  nvarchar varying(20) NOT NULL,
+      "CategoryName "  nvarchar varying(20) NOT NULL  
+);
+
+CREATE TABLE dim_Time(
+    TimeId INTEGER NOT NULL primary key autoincrement,
+    fecha date NOT NULL,
+    año INTEGER NOT NULL,
+    mes INTEGER NOT NULL,
+    dia INTEGER NOT NULL,
+    nombre_dia nvarchar(50) NOT NULL,
+    dia_semana integer  NOT NULL,
+    semana integer NOT NULL,
+    trimestre integer NOT NULL
+);
+CREATE TABLE dim_location(
+    locationId INTEGER NOT NULL primary key autoincrement,
+    ShipName  nvarchar(50) NOT NULL,
+    ShipAddress  nvarchar(50) NOT NULL,
+    ShipCity  nvarchar(50) NOT NULL,
+    ShipRegion  nvarchar(50) NOT NULL,
+    ShipPostalCode  nvarchar(50) NOT NULL,
+    ShipCountry  nvarchar(50) NOT NULL
+);
+CREATE TABLE IF NOT EXISTS dim_Supplier
+(
+    "SupplierId" integer NOT NULL primary key autoincrement,
+    "CompanyName" nvarchar varying(20) NOT NULL,
+    "ContactName" nvarchar varying(80) NOT NULL,
+    "ContactTitle" nvarchar varying(80) NOT NULL,
+    "Address"  nvarchar varying(80) NOT NULL,
+    "City "  nvarchar varying(80) NOT NULL , 
+    "Region "  nvarchar varying(80) NOT NULL,
+    "PostalCode "  nvarchar varying(80) NOT NULL,  
+    "Country "  nvarchar varying(80) NOT NULL,
+    "Phone"  nvarchar varying(80) NOT NULL,    
+    "Fax "  nvarchar varying(80) NOT NULL ,
+     "HomePage"  nvarchar varying(80) NOT NULL          
+);
+CREATE TABLE dim_shipper(
+    shipperId INTEGER NOT NULL primary key autoincrement,
+    CompanyName  nvarchar(50) NOT NULL,
+    Phone  nvarchar(50) NOT NULL
+);
+
+
+create table Order_Vent(
+    id_Order integer not null primary key autoincrement,
+    CustomerId integer not null,
+    EmployeeId integer not null,
+    LocationId integer not null,
+    TimeId integer not null,
+    ProductId integer not null,
+    ShipperId integer not null,
+    SupplierId integer not null,
+    
+    
+    Price numeric(10,2) not null,
+    FOREIGN KEY (
+        CustomerId
+    )
+    REFERENCES dim_customers (CustomerId) ON DELETE NO ACTION
+                                    ON UPDATE NO ACTION,
+    FOREIGN KEY (
+        EmployeeId
+    )
+    REFERENCES dim_employees (EmployeeId) ON DELETE NO ACTION
+                                    ON UPDATE NO ACTION,
+    FOREIGN KEY (
+        LocationId
+    )
+    REFERENCES dim_location (LocationId) ON DELETE NO ACTION
+                                    ON UPDATE NO ACTION,
+    FOREIGN KEY (
+        TimeId
+    )
+    REFERENCES dim_Time (TimeId) ON DELETE NO ACTION
+                                    ON UPDATE NO ACTION,
+    FOREIGN KEY (
+        ProductId
+    )
+    REFERENCES dim_products (ProductId) ON DELETE NO ACTION
+                                    ON UPDATE NO ACTION,
+    FOREIGN KEY (
+        ShipperId
+    )
+    REFERENCES dim_shipper (ShipperId) ON DELETE NO ACTION
+                                    ON UPDATE NO ACTION ,                                                                   
+    FOREIGN KEY (
+        SupplierId
+    )
+    REFERENCES dim_Supplier (SupplierId) ON DELETE NO ACTION
+                                    ON UPDATE NO ACTION                                                                    
+)
+CREATE TABLE dim_location (
+    LocationId        INTEGER      PRIMARY KEY AUTOINCREMENT NOT NULL,
+    ShipName       VARCHAR (8000),
+    ShipAddress    VARCHAR (8000),
+    ShipCity       VARCHAR (8000),
+    ShipRegion     VARCHAR (8000),
+    ShipPostalCode VARCHAR (8000),
+    ShipCountry    VARCHAR (8000) 
+)
