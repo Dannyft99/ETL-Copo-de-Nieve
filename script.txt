@@ -1,0 +1,132 @@
+df_customer = pd.read_sql_query(
+"""
+SELECT 
+    CompanyName,  
+    ContactName,  
+    ContactTitle, 
+    Address,      
+    City,         
+    Region,     
+    ifnull(PostalCode ,'No Asigando')as PostalCode,
+    replace(replace(Country,"UK","United Kingdom"),"USA","The United States of America") as Country, 
+    Phone,
+    Fax            
+FROM Customer;
+"""
+ ,con = engine.connect())
+df_customer.head(8)
+
+df_employe = pd.read_sql_query(
+"""
+SELECT 
+    LastName,
+    FirstName,       
+    Title,         
+    TitleOfCourtesy, 
+    BirthDate  ,    
+    HireDate ,      
+    Address,        
+    City  ,         
+    Region,        
+    PostalCode,      
+    Country,        
+    HomePhone,      
+    Extension,                   
+    Notes,                    
+    PhotoPath             
+FROM Employee;
+"""
+ ,con = engine.connect())
+df_employe.head(4)
+
+
+df_location = pd.read_sql_query(
+"""
+SELECT  
+    ShipName,
+    ShipAddress,   
+    ShipCity  ,    
+    ShipRegion ,    
+    ifnull(ShipPostalCode ,'No Asigando')as ShipPostalCode,     
+    replace(replace(ShipCountry,"UK","United Kingdom"),"USA","The United States of America") as ShipCountry              
+                   
+FROM Orders;
+"""
+ ,con = engine.connect())
+df_location.head(4)
+
+df_produc = pd.read_sql_query(
+"""
+SELECT 
+    ProductName,                              
+    QuantityPerUnit, 
+    UnitPrice,      
+    UnitsInStock,    
+    [UnitsOnOrder],   
+    ReorderLevel,   
+    Discontinued
+    
+
+FROM Product;
+"""
+ ,con = engine.connect())
+df_produc.head(4)
+
+df_shipper = pd.read_sql_query(
+"""
+SELECT Id As shipperId,
+                
+    CompanyName,
+    Phone      
+                  
+FROM Shipper;
+
+"""
+ ,con = engine.connect())
+df_shipper.head(4)
+
+df_supplier = pd.read_sql_query(
+"""
+SELECT             
+    CompanyName ,
+    ContactName  ,
+    ContactTitle ,
+    Address,
+    City,     
+    Region,   
+    PostalCode,
+    Country,         
+     Fax,
+     HomePage,         
+    Phone   
+    FROM supplier;
+"""
+ ,con = engine.connect())
+df_supplier.head(4)
+
+fecha_inicio='2009-01-01'
+fecha_fin='2030-12-31'
+dataFrameDate = pd.DataFrame({'fecha': pd.date_range(fecha_inicio, fecha_fin)})
+dataFrameDate['año'] = dataFrameDate.fecha.dt.year
+dataFrameDate['mes'] = dataFrameDate.fecha.dt.month
+dataFrameDate['dia'] = dataFrameDate.fecha.dt.day
+dataFrameDate['nombre_dia'] = dataFrameDate.fecha.dt.day_name()
+dataFrameDate['dia_semana'] = dataFrameDate.fecha.dt.dayofweek
+dataFrameDate['semana'] = dataFrameDate.fecha.dt.weekofyear
+dataFrameDate['trimestre'] = dataFrameDate.fecha.dt.quarter
+dataFrameDate = dataFrameDate[['fecha', 'año', 'mes', 'dia', 'nombre_dia', 'dia_semana', 'semana', 'trimestre']] 
+dataFrameDate
+
+TablaHechos = pd.read_sql_query(
+"""   
+SELECT OrderDetail.Id AS FactId ,Customer.Id AS CustomerId, Employee.Id AS EmployeeId, Orders.Id AS LocationId, Orders.OrderDate,Product.Id AS ProductId , Shipper.Id AS ShipperId, Supplier.Id AS SupplierId, OrderDetail.UnitPrice
+FROM OrderDetail
+ INNER JOIN Orders  ON Orders.Id = OrderDetail.OrderId 
+INNER JOIN  Customer ON Customer.Id = Orders.CustomerId 
+INNER JOIN Employee  ON Employee.Id = Orders.EmployeeId
+INNER JOIN Product  ON Product.Id = OrderDetail.ProductId
+ INNER JOIN Shipper  ON Shipper.Id = Orders.ShipVia 
+ INNER JOIN Supplier ON Supplier.Id = Product.SupplierId ;
+"""
+ ,con = engine.connect())
+TablaHechos.head(4)
